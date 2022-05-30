@@ -184,8 +184,8 @@
       ]
     },
     "C:\\Users\\two\\Desktop\\web3 projects\\appweb3\\contracts\\nft\\ERC721.sol": {
-      "lastModificationDate": 1650990649358,
-      "contentHash": "c4fc85d23217893b6a34bdc255fcaf26",
+      "lastModificationDate": 1653073048037,
+      "contentHash": "6771a3a518b616de9b8d9e9d2f413034",
       "sourceName": "contracts/nft/ERC721.sol",
       "solcConfig": {
         "version": "0.8.4",
@@ -549,8 +549,8 @@
       ]
     },
     "C:\\Users\\two\\Desktop\\web3 projects\\appweb3\\contracts\\nft\\Market.sol": {
-      "lastModificationDate": 1653068444893,
-      "contentHash": "2733e67a61738cf32b7cea8627a75af4",
+      "lastModificationDate": 1653894528796,
+      "contentHash": "0a1d570ef16edf579b8874a878a7e0b4",
       "sourceName": "contracts/nft/Market.sol",
       "solcConfig": {
         "version": "0.8.4",

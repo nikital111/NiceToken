@@ -13,6 +13,7 @@ contract Market {
     ERC721 public nft;
     address owner;
     uint256 commission = 10;
+    uint volume = 0;
 
     struct Item {
         uint256 idNft;
@@ -99,6 +100,8 @@ contract Market {
         require(index != 101, "error");
         require(msg.sender != items[index].seller, "error");
         require(msg.value == items[index].price, "wrong amount");
+
+        volume += msg.value;
 
         address _seller = items[index].seller;
         uint256 _price = items[index].price;
