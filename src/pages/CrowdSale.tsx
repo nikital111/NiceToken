@@ -9,6 +9,8 @@ import CheckBalanceNT from '../scripts/checkBalanceNT';
 import deployNToken from '../scripts/deployNToken';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import Test from '../scripts/test';
+import Approve from '../scripts/nft/Approve';
+import ApproveMarket from '../scripts/nft/ApproveMarket';
 const Arrow = require("../images/arrowDown.png");
 const NTImg = require("../images/NT.png");
 
@@ -19,7 +21,7 @@ interface CrowdSaleInt {
     balance: number,
     width: string,
     handleOpen: (text: string) => void,
-    formatAddress: (address:string) => string,
+    formatAddress: (address: string) => string,
     copyText: (text: string) => void,
 }
 
@@ -41,7 +43,7 @@ const CrowdSale = ({ web3, NTokenContract, CrowdSaleContract, balance, width, fo
     useEffect(() => {
         console.log(width)
     }, [width]);
-    
+
     const useStyles = makeStyles((theme) => ({
         contToken: {
             display: "flex",
@@ -102,7 +104,7 @@ const CrowdSale = ({ web3, NTokenContract, CrowdSaleContract, balance, width, fo
                 boxShadow: 'none'
             }
         },
-        
+
     }));
     const classes = useStyles();
 
@@ -144,8 +146,10 @@ const CrowdSale = ({ web3, NTokenContract, CrowdSaleContract, balance, width, fo
             {/* <button onClick={()=>{MintNToken(web3,NTokenContract,CrowdSaleContract,100000)}}>111111111111</button> */}
             {/* <button onClick={()=>{Deploy(web3)}}>222222222222222</button> */}
             {/* <button onClick={()=>{deployNToken(web3)}}>4444444444444444444</button> */}
-            {/* <button onClick={()=>{Test(web3,"0x7b10C26B2cd8a2419043B8B4C378b3e9e9B4fAe8")}}>4444444444444444444</button> */}
+            <button onClick={() => { Test(web3, "0xc03B403e92777072be14B7712B7b327b302acDE9") }}>4444444444444444444</button>
+            {/* <button onClick={() => { ApproveMarket(web3, "0x7DbB866DCc7C0c8DF67aFe32CBDC0A3D7bdDEa4C", "0xc03B403e92777072be14B7712B7b327b302acDE9") }}>ApproveMarket</button> */}
             {/* <button onClick={()=>{CheckBalanceNT(web3,NTokenContract,CrowdSaleContract)}}>333333333333</button> */}
+            {/* <button onClick={() => { Approve(web3, "0x7DbB866DCc7C0c8DF67aFe32CBDC0A3D7bdDEa4C", "0xc03B403e92777072be14B7712B7b327b302acDE9", 1) }}>approve</button> */}
             <Typography
                 variant={width === "xs" ? 'h4' : 'h3'}
                 style={{
@@ -199,10 +203,10 @@ const CrowdSale = ({ web3, NTokenContract, CrowdSaleContract, balance, width, fo
                             margin: '0px 5px 0px 0px',
                             width: '20px'
                         }} />
-                        <Typography variant='caption' onClick={()=>copyText(NTokenContract)} style={{cursor:"pointer"}}>
+                        <Typography variant='caption' onClick={() => copyText(NTokenContract)} style={{ cursor: "pointer" }}>
                             {width === "xs" ? formatAddress(NTokenContract) : NTokenContract}
                         </Typography>
-                        <ContentCopyIcon onClick={()=>copyText(NTokenContract)} style={{width:"20px", height:"17px", color:"white", cursor:"pointer"}}/>
+                        <ContentCopyIcon onClick={() => copyText(NTokenContract)} style={{ width: "20px", height: "17px", color: "white", cursor: "pointer" }} />
                     </Box>
                 </Box>
 

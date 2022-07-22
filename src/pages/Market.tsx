@@ -5,10 +5,11 @@ import Select from "@mui/material/Select";
 import { makeStyles } from '@material-ui/core/styles';
 // @ts-ignore: Unreachable code error
 import EthImg from '../images/eth2-img.svg';
+import MarketList from '../components/MarketList';
 
 interface MarketInt {
     web3: any,
-    NTokenContract: string,
+    MarketContract: string,
     NFTContract: string,
     balance: number,
     width: string,
@@ -17,7 +18,7 @@ interface MarketInt {
     copyText: (text: string) => void,
 }
 
-const Market = ({ web3, NTokenContract, NFTContract, balance, width, handleOpen, formatAddress, copyText }: MarketInt) => {
+const Market = ({ web3, MarketContract, NFTContract, balance, width, handleOpen, formatAddress, copyText }: MarketInt) => {
 
     const [values, setValues] = useState({
         id: '',
@@ -251,6 +252,8 @@ const Market = ({ web3, NTokenContract, NFTContract, balance, width, handleOpen,
                         </Select>
                 </Box>
             </Box>
+
+            <MarketList width={width}/>
         </Box>
     )
 

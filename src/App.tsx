@@ -14,9 +14,9 @@ import Market from './pages/Market';
 let web3: any;
 const NTokenContract = "0x42051f63cb7d35AF942c51Ba00F601d34894d4B9";
 const CrowdSaleContract = "0xF32014F1f51853D0f17aa93c04eAC719F3AEA025";
-const NFTContract = "0x4AF47648dA52a1f19d20e669aaF0B0a55fF04d65";
+const NFTContract = "0x7DbB866DCc7C0c8DF67aFe32CBDC0A3D7bdDEa4C";
 let MyContract = "0x4f66837cC7ca7362eA68c7D8C1b84BDC278e032d";
-const MarketAddress = "0x7b10C26B2cd8a2419043B8B4C378b3e9e9B4fAe8";
+const MarketAddress = "0xc03B403e92777072be14B7712B7b327b302acDE9";
 
 declare let window: any;
 function App() {
@@ -170,7 +170,7 @@ function App() {
           element={
             <Market
               web3={web3}
-              NTokenContract={NTokenContract}
+              MarketContract={MarketAddress}
               NFTContract={NFTContract}
               balance={balance}
               handleOpen={handleOpen}
