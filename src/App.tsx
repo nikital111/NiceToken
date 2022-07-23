@@ -20,7 +20,6 @@ const MarketAddress = "0xc03B403e92777072be14B7712B7b327b302acDE9";
 
 declare let window: any;
 function App() {
-
   useEffect(() => {
     ff();
   }, [])

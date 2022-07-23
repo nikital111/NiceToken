@@ -5,7 +5,11 @@ export default async function GetList(web3: any, contractAddress: string) {
 
     const MyContract = new web3.eth.Contract(MarketArtifacts.abi, contractAddress);
 
-    const list = await MyContract.methods.getList().call({from:acc});
+    let list;
+    await MyContract.methods.getList().call({ from: acc })
+        .then((data: any) => {
+            list = data;
+        });
 
     return list;
 }

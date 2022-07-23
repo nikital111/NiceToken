@@ -90,7 +90,7 @@ const Market = ({ web3, MarketContract, NFTContract, balance, width, handleOpen,
             color: "#BDC0C6"
         },
         marketCont: {
-            maxWidth: '1000px',
+            maxWidth: '600px',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'flex-start'
@@ -253,7 +253,7 @@ const Market = ({ web3, MarketContract, NFTContract, balance, width, handleOpen,
                 </Box>
             </Box>
 
-            <MarketList width={width}/>
+            <MarketList web3={web3} MarketContract={MarketContract} sort={valueSel} search={+values.id} width={width}/>
         </Box>
     )
 
