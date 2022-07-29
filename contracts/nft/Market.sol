@@ -13,7 +13,7 @@ contract Market {
     ERC721 public nft;
     address owner;
     uint256 commission = 10;
-    uint volume = 0;
+    uint256 volume = 0;
 
     struct Item {
         uint256 idNft;
@@ -125,6 +125,10 @@ contract Market {
 
     function getList() public view returns (Item[] memory) {
         return items;
+    }
+
+    function getVolume() public view returns (uint256) {
+        return volume;
     }
 
     function getIndex(uint256 _id) internal view returns (uint256) {

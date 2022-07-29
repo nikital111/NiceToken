@@ -6,7 +6,11 @@ import { makeStyles } from '@material-ui/core/styles';
 // @ts-ignore: Unreachable code error
 import EthImg from '../images/eth2-img.svg';
 import MarketList from '../components/MarketList';
-
+import getTokensOwned from "../scripts/nft/GetTokensOwned";
+import BuyNft from '../scripts/nft/BuyNft';
+import DelistItem from '../scripts/nft/DelistItem';
+import GetList from '../scripts/nft/GetList';
+import GetVolume from '../scripts/nft/GetVolume';
 interface MarketInt {
     web3: any,
     MarketContract: string,
@@ -26,6 +30,54 @@ const Market = ({ web3, MarketContract, NFTContract, balance, width, handleOpen,
     });
 
     const [valueSel, setValueSel] = useState(1);
+    const [tokens, setTokens] = useState([]);
+    const [list, setList]:any = useState([]);
+    const [copyList, setCopyList] = useState([]);
+    const [volume, setVolume]:any = useState(0);
+
+    useEffect(() => {
+        let myList = [...list];
+        if (valueSel === 1) {
+            myList.sort((a: any, b: any) => a.price - b.price);
+            setList(myList);
+        }
+        if (valueSel === 2) {
+            myList.sort((a: any, b: any) => b.price - a.price);
+            setList(myList);
+        }
+        if (valueSel === 3) {
+            myList.sort((a: any, b: any) => a.idNft - b.idNft);
+            setList(myList);
+        }
+        if (valueSel === 4) {
+            myList.sort((a: any, b: any) => b.idNft - a.idNft);
+            setList(myList);
+        }
+    }, [valueSel])
+
+    useEffect(()=>{
+        if(!values.id){
+            setList(copyList);
+            return;
+        }
+        let myList:any = [...copyList];
+        myList = myList.filter((item:any)=> {
+            return +item.idNft === +values.id;
+        });
+        setList(myList);
+    },[values.id])
+
+    const getListf = async () => {
+        const data: any = await GetList(web3, MarketContract);
+        setCopyList(data);
+        setList(data);
+    };
+
+    useEffect(()=>{
+        getTokensOwned(web3, NFTContract, setTokens);
+        getListf();
+        getVolume();
+    },[]);
 
     const handleChange = (title: string) => (e: any) => {
         setValues({ ...values, [title]: e.target.value });
@@ -34,6 +86,28 @@ const Market = ({ web3, MarketContract, NFTContract, balance, width, handleOpen,
     const handleSelect = (e: any) => {
         setValueSel(e.target.value);
     };
+
+    const buyItem = async(id:number, val:number)=>{
+        BuyNft(web3, MarketContract, id, val);
+    };
+
+    const delistItem = async(id:number)=>{
+        DelistItem(web3, MarketContract, id);
+    };
+
+    const getFloorPrice = ()=>{
+        let res = 0;
+        for(let i = 0; i < list.length; i++){
+            if(res > list[i].price || res === 0) res = list[i].price;
+        }
+        return web3.utils.fromWei(res);
+    };
+
+    const getVolume = async()=>{
+       const res = await GetVolume(web3,MarketContract);
+       setVolume(web3.utils.fromWei(res));
+    };
+    
 
     const useStyles = makeStyles((theme) => ({
         mainCont: {
@@ -165,7 +239,7 @@ const Market = ({ web3, MarketContract, NFTContract, balance, width, handleOpen,
                         }}
                     >
                         <Typography className={classes.mainText}>
-                            3
+                            {list.length}
                         </Typography>
                         <Typography className={classes.subText}>
                             items
@@ -180,7 +254,7 @@ const Market = ({ web3, MarketContract, NFTContract, balance, width, handleOpen,
                         <div className={classes.textCont}>
                             <img src={EthImg} className={classes.imgEth} />
                             <Typography className={classes.mainText}>
-                                0.2
+                                {list.length ? getFloorPrice() : 0}
                             </Typography>
                         </div>
                         <Typography className={classes.subText}>
@@ -189,14 +263,11 @@ const Market = ({ web3, MarketContract, NFTContract, balance, width, handleOpen,
                     </Box>
                     <Box
                         className={classes.statCont}
-                        style={{
-
-                        }}
                     >
                         <div className={classes.textCont}>
                             <img src={EthImg} className={classes.imgEth} />
                             <Typography className={classes.mainText}>
-                                1.4
+                               {volume}
                             </Typography>
                         </div>
                         <Typography className={classes.subText}>
@@ -253,7 +324,7 @@ const Market = ({ web3, MarketContract, NFTContract, balance, width, handleOpen,
                 </Box>
             </Box>
 
-            <MarketList web3={web3} MarketContract={MarketContract} sort={valueSel} search={+values.id} width={width}/>
+            <MarketList web3={web3} MarketContract={MarketContract} buyItem={buyItem} list={list} delistItem={delistItem} width={width}/>
         </Box>
     )
 

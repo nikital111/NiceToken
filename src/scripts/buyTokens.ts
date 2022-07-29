@@ -1,6 +1,6 @@
 const CrowdSaleArtifacts = require('../artifacts/contracts/CrowdSale.sol/Crowdsale.json');
 
-export default async function BuyTokens(web3:any,contractAddress:string,value:number, balance:number) {
+export default async function BuyTokens(web3:any,contractAddress:string,value:number, balance:number, callback:any) {
     const [acc] = await web3.eth.getAccounts();
 
     let st = value.toString();
@@ -30,6 +30,7 @@ export default async function BuyTokens(web3:any,contractAddress:string,value:nu
         console.log(hash,' hash')
     })
     .on('receipt', function(receipt:any){
+        callback();
         console.log(receipt,' receipt');
     })
     // .on('confirmation', function(confirmationNumber, receipt){ 

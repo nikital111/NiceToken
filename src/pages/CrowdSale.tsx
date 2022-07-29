@@ -35,14 +35,8 @@ const CrowdSale = ({ web3, NTokenContract, CrowdSaleContract, balance, width, fo
     }
 
     useEffect(() => {
-        if (web3) {
             checkTokens();
-        }
     }, [web3]);
-
-    useEffect(() => {
-        console.log(width)
-    }, [width]);
 
     const useStyles = makeStyles((theme) => ({
         contToken: {
@@ -138,7 +132,7 @@ const CrowdSale = ({ web3, NTokenContract, CrowdSaleContract, balance, width, fo
     }
 
     const buyToken = () => {
-        BuyTokens(web3, CrowdSaleContract, amountSend, balance);
+        BuyTokens(web3, CrowdSaleContract, amountSend, balance, checkTokens);
     }
 
     return (
@@ -146,10 +140,10 @@ const CrowdSale = ({ web3, NTokenContract, CrowdSaleContract, balance, width, fo
             {/* <button onClick={()=>{MintNToken(web3,NTokenContract,CrowdSaleContract,100000)}}>111111111111</button> */}
             {/* <button onClick={()=>{Deploy(web3)}}>222222222222222</button> */}
             {/* <button onClick={()=>{deployNToken(web3)}}>4444444444444444444</button> */}
-            <button onClick={() => { Test(web3, "0xc03B403e92777072be14B7712B7b327b302acDE9") }}>4444444444444444444</button>
-            {/* <button onClick={() => { ApproveMarket(web3, "0x7DbB866DCc7C0c8DF67aFe32CBDC0A3D7bdDEa4C", "0xc03B403e92777072be14B7712B7b327b302acDE9") }}>ApproveMarket</button> */}
+            <button onClick={() => { Test(web3, "0x944B3De9e7702eC3fC775D586b14B8b217Bd1664") }}>4444444444444444444</button>
+            <button onClick={() => { ApproveMarket(web3, "0x2F8475FD6EC9b5FCF102b6eC75a31d91b12AA2B5", "0x944B3De9e7702eC3fC775D586b14B8b217Bd1664") }}>ApproveMarket</button>
             {/* <button onClick={()=>{CheckBalanceNT(web3,NTokenContract,CrowdSaleContract)}}>333333333333</button> */}
-            {/* <button onClick={() => { Approve(web3, "0x7DbB866DCc7C0c8DF67aFe32CBDC0A3D7bdDEa4C", "0xc03B403e92777072be14B7712B7b327b302acDE9", 1) }}>approve</button> */}
+            <button onClick={() => { Approve(web3, "0x2F8475FD6EC9b5FCF102b6eC75a31d91b12AA2B5", "0x944B3De9e7702eC3fC775D586b14B8b217Bd1664", 2) }}>approve</button>
             <Typography
                 variant={width === "xs" ? 'h4' : 'h3'}
                 style={{

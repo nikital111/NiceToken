@@ -1,6 +1,6 @@
 const NFTArtifacts = require('../../artifacts/contracts/nft/ERC721.sol/ERC721.json');
 
-export default async function Mint(web3:any,contractAddress:string) {
+export default async function Mint(web3:any,contractAddress:string, callback:any) {
     const [acc] = await web3.eth.getAccounts();
 
     const MyContract = new web3.eth.Contract(NFTArtifacts.abi,contractAddress);
@@ -12,6 +12,7 @@ export default async function Mint(web3:any,contractAddress:string) {
         console.log(hash,' hash')
     })
     .on('receipt', function(receipt:any){
+        callback();
         console.log(receipt,' receipt');
     })
     // .on('confirmation', function(confirmationNumber, receipt){ 

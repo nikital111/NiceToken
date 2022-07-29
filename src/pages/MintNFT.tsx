@@ -98,7 +98,7 @@ const MintNFT = ({ web3, NTokenContract, NFTContract, balance, width, handleOpen
     const classes = useStyles();
 
     const mintNFT = () => {
-        Mint(web3,NFTContract);
+        Mint(web3,NFTContract,supplyF);
     };
 
     return (

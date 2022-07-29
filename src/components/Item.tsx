@@ -12,11 +12,25 @@ interface IItem {
     endSale: number,
     description: string,
     img: string,
+    seller: string,
+    buyItem: (id:number, val:number)=>{},
+    delistItem: (id:number)=>{},
     web3: any,
     width: string
 }
 
-const Item = ({ id, price, endSale, description, img, web3, width }: IItem) => {
+const Item = ({ id, price, endSale, description, img, seller, buyItem, delistItem, web3, width }: IItem) => {
+
+    const [acc, setAcc] = useState('');
+
+    const getAcc = async()=>{
+        const [acc1] = await web3.eth.getAccounts();
+        setAcc(acc1);
+    };
+
+    useEffect(()=>{
+        getAcc();
+    },[])
 
     const useStyles = makeStyles((theme) => ({
         item: {
@@ -47,9 +61,9 @@ const Item = ({ id, price, endSale, description, img, web3, width }: IItem) => {
             color: '#fff',
             fontWeight: 600
         },
-        end:{
-            color:"#fff",
-            fontSize:"16px",
+        end: {
+            color: "#fff",
+            fontSize: "16px",
             fontWeight: 600,
             margin: "8px 0px 10px 10px"
         },
@@ -71,24 +85,24 @@ const Item = ({ id, price, endSale, description, img, web3, width }: IItem) => {
     }));
     const classes = useStyles();
 
-    const getDate = ()=>{
+    const getDate = () => {
         const dateNow = Date.now();
-        const dateEnd = endSale*1000;
+        const dateEnd = endSale * 1000;
 
-        if(dateEnd - dateNow > 86400000){
-           const dif = (dateEnd - dateNow) / 86400000;
-           const days = Math.floor(dif);
-           return `${days} days`;
+        if (dateEnd - dateNow > 86400000) {
+            const dif = (dateEnd - dateNow) / 86400000;
+            const days = Math.floor(dif);
+            return `${days} days`;
         }
-        else if(dateEnd - dateNow > 3600000){
+        else if (dateEnd - dateNow > 3600000) {
             const dif = (dateEnd - dateNow) / 3600000;
             const hours = Math.floor(dif);
-           return `${hours} hours`;
+            return `${hours} hours`;
         }
-        else{
+        else {
             const dif = (dateEnd - dateNow) / 60000;
             const mins = Math.floor(dif);
-           return `${mins} minutes`;
+            return `${mins} minutes`;
         }
     };
 
@@ -125,12 +139,27 @@ const Item = ({ id, price, endSale, description, img, web3, width }: IItem) => {
                 Ends in {getDate()}
             </Box>
 
-            <Button
-                className={classes.butt}
-                variant='contained'
-            >
-                Buy Now
-            </Button>
+            {
+                seller === acc ?
+                    <Button
+                        className={classes.butt}
+                        variant='contained'
+                        style={{
+                            backgroundColor: "red"
+                        }}
+                        onClick={()=>delistItem(id)}
+                    >
+                        Delist
+                    </Button>
+                    :
+                    <Button
+                        className={classes.butt}
+                        variant='contained'
+                         onClick={()=>buyItem(id,price)}
+                    >
+                        Buy Now
+                    </Button>
+            }
 
         </Box>
     )
