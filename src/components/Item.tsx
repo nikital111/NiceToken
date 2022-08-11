@@ -13,8 +13,8 @@ interface IItem {
     description: string,
     img: string,
     seller: string,
-    buyItem: (id:number, val:number)=>{},
-    delistItem: (id:number)=>{},
+    buyItem: (id: number, val: number) => {},
+    delistItem: (id: number) => {},
     web3: any,
     width: string
 }
@@ -23,14 +23,14 @@ const Item = ({ id, price, endSale, description, img, seller, buyItem, delistIte
 
     const [acc, setAcc] = useState('');
 
-    const getAcc = async()=>{
+    const getAcc = async () => {
         const [acc1] = await web3.eth.getAccounts();
         setAcc(acc1);
     };
 
-    useEffect(()=>{
+    useEffect(() => {
         getAcc();
-    },[])
+    }, [])
 
     const useStyles = makeStyles((theme) => ({
         item: {
@@ -106,63 +106,75 @@ const Item = ({ id, price, endSale, description, img, seller, buyItem, delistIte
         }
     };
 
-    return (
-        <Box className={classes.item}>
-            <img src={img} className={classes.img} />
 
-            <Box className={classes.titleCont}>
-                <Typography className={classes.title}>
-                    NiceMonkeys #{id}
-                </Typography>
-            </Box>
+    if ((endSale * 1000 < Date.now()) && seller !== acc) {
+        return (
+            <></>
+        )
+    }
+    else {
+        return (
+            <Box className={classes.item}>
+                <img src={img} className={classes.img} />
 
-            <Box className={classes.priceCont}>
-
-                <Typography className={classes.price}>
-                    Price
-                </Typography>
-
-                <Box
-                    style={{
-                        display: 'flex'
-                    }}
-                >
-                    <img src={EthImg} style={{ width: "11px", marginRight: '3px' }} />
-                    <Typography className={classes.price}>
-                        {web3.utils.fromWei(price)}
+                <Box className={classes.titleCont}>
+                    <Typography className={classes.title}>
+                        NiceMonkeys #{id}
                     </Typography>
                 </Box>
 
-            </Box>
+                <Box className={classes.priceCont}>
 
-            <Box className={classes.end}>
-                Ends in {getDate()}
-            </Box>
+                    <Typography className={classes.price}>
+                        Price
+                    </Typography>
 
-            {
-                seller === acc ?
-                    <Button
-                        className={classes.butt}
-                        variant='contained'
+                    <Box
                         style={{
-                            backgroundColor: "red"
+                            display: 'flex'
                         }}
-                        onClick={()=>delistItem(id)}
                     >
-                        Delist
-                    </Button>
-                    :
-                    <Button
-                        className={classes.butt}
-                        variant='contained'
-                         onClick={()=>buyItem(id,price)}
-                    >
-                        Buy Now
-                    </Button>
-            }
+                        <img src={EthImg} style={{ width: "11px", marginRight: '3px' }} />
+                        <Typography className={classes.price}>
+                            {web3.utils.fromWei(price)}
+                        </Typography>
+                    </Box>
 
-        </Box>
-    )
+                </Box>
+
+                <Box className={classes.end}>
+                    Ends in {getDate()}
+                </Box>
+
+                {
+                    seller === acc ?
+                        <Button
+                            className={classes.butt}
+                            variant='contained'
+                            style={{
+                                backgroundColor: "red"
+                            }}
+                            onClick={() => delistItem(id)}
+                        >
+                            Delist
+                        </Button>
+                        :
+                        <Button
+                            className={classes.butt}
+                            variant='contained'
+                            onClick={() => buyItem(id, price)}
+                        >
+                            Buy Now
+                        </Button>
+                }
+
+            </Box>
+        )
+    }
+
+
+
+
 }
 
 export default Item;

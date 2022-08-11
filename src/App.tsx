@@ -11,6 +11,7 @@ import MintNFT from './pages/MintNFT';
 import NFTSub from './subscriptions/NFTSub';
 import getBalances from './scripts/getBalances';
 import Market from './pages/Market';
+import Inventory from './pages/Inventory';
 const NTokenContract = "0x42051f63cb7d35AF942c51Ba00F601d34894d4B9";
 const CrowdSaleContract = "0xF32014F1f51853D0f17aa93c04eAC719F3AEA025";
 const NFTContract = "0x2F8475FD6EC9b5FCF102b6eC75a31d91b12AA2B5";
@@ -169,6 +170,20 @@ function App() {
           path="/market"
           element={
             <Market
+              web3={web3}
+              MarketContract={MarketAddress}
+              NFTContract={NFTContract}
+              balance={balance}
+              handleOpen={handleOpen}
+              formatAddress={formatAddress}
+              copyText={copyText}
+            />}>
+        </Route>
+
+        <Route
+          path="/inventory"
+          element={
+            <Inventory
               web3={web3}
               MarketContract={MarketAddress}
               NFTContract={NFTContract}

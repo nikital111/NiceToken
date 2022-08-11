@@ -4,7 +4,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Box, Button, Divider, IconButton, List, ListItem, ListItemIcon, ListItemText, SwipeableDrawer, Typography, withWidth } from '@material-ui/core';
 import "./Header.css"
 import MailIcon from '@mui/icons-material/Mail';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import LocalGroceryStoreIcon from '@mui/icons-material/LocalGroceryStore';
+import InventoryIcon from '@mui/icons-material/Inventory';
 import { withStyles } from '@material-ui/core/styles';
 import MenuIcon from '@mui/icons-material/Menu';
 const NTImg = require("../images/NT.png");
@@ -119,7 +122,7 @@ const Header = ({ wallet, connectW, width, handleOpen, formatAddress, copyText }
                 <NavLink to='/' className="listIcon" style={{ textDecoration: 'none', color: 'white' }}>
                     <ListItem button>
                         <ListItemIcon>
-                            <MailIcon />
+                            <AttachMoneyIcon />
                         </ListItemIcon>
                         <ListItemText primary={"Buy Token"} />
                     </ListItem>
@@ -127,7 +130,7 @@ const Header = ({ wallet, connectW, width, handleOpen, formatAddress, copyText }
                 <NavLink to='/mintnft' className="listIcon" style={{ textDecoration: 'none', color: 'white' }}>
                     <ListItem button>
                         <ListItemIcon>
-                            <MailIcon />
+                            <AttachMoneyIcon />
                         </ListItemIcon>
                         <ListItemText primary={"Mint NFT"} />
                     </ListItem>
@@ -135,9 +138,17 @@ const Header = ({ wallet, connectW, width, handleOpen, formatAddress, copyText }
                 <NavLink to='/market' className="listIcon" style={{ textDecoration: 'none', color: 'white' }}>
                     <ListItem button>
                         <ListItemIcon>
-                            <MailIcon />
+                            <LocalGroceryStoreIcon />
                         </ListItemIcon>
                         <ListItemText primary={"Market"} />
+                    </ListItem>
+                </NavLink>
+                <NavLink to='/inventory' className="listIcon" style={{ textDecoration: 'none', color: 'white' }}>
+                    <ListItem button>
+                        <ListItemIcon>
+                            <InventoryIcon />
+                        </ListItemIcon>
+                        <ListItemText primary={"Inventory"} />
                     </ListItem>
                 </NavLink>
             </List>
@@ -188,6 +199,9 @@ const Header = ({ wallet, connectW, width, handleOpen, formatAddress, copyText }
                             </NavLink>
                             <NavLink to='/market' className={classes.links}>
                                 Market
+                            </NavLink>
+                            <NavLink to='/inventory' className={classes.links}>
+                                Inventory
                             </NavLink>
                         </div>
                         <div className={classes.contC}>
