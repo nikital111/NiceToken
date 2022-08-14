@@ -29,18 +29,26 @@ function App() {
   const [openSnack, setOpenSnack] = useState(false);
   const [textSnack, setTextSnack] = useState('');
   const [openBack, setOpenBack] = useState(false);
+  const [openBackNoEth, setOpenBackNoEth] = useState(false);
 
   useEffect(() => {
+    if(window.ethereum){
     ff();
     window.ethereum.on('chainChanged', handleChainChanged);
     window.ethereum.on('accountsChanged', handleWalletChanged);
+    }
+    else {
+      setOpenBackNoEth(true);
+    }
   }, []);
 
   useEffect(() => {
+    if(window.ethereum){
     if (window.ethereum.chainId !== "0x4" && window.ethereum.chainId !== null) {
       setOpenBack(true);
       changeChain();
     }
+  }
   }, [web3]);
 
 
@@ -141,6 +149,10 @@ function App() {
     handleOpen("Copied!");
   }
 
+  const toMetamask = ()=>{
+    window.location = "https://metamask.io/";
+  };
+
   const useStyles = makeStyles((theme) => ({
     back: {
       zIndex: 1299,
@@ -203,6 +215,36 @@ function App() {
         </Box>
       </Snackbar>
 
+      <Backdrop open={openBackNoEth} className={classes.back}>
+        <Box className={classes.contBack}>
+          <Icon
+            style={{
+              width: '60px',
+              height: '60px',
+              marginBottom: '15px'
+            }}
+          >
+            <ErrorIcon
+              style={{
+                color: 'white',
+                width: '60px',
+                height: '60px'
+              }}
+            ></ErrorIcon>
+          </Icon>
+          <Typography className={classes.title}>
+          Please install MetaMask!
+          </Typography>
+          <Button
+            className={classes.butt}
+            variant='contained'
+            onClick={toMetamask}
+          >
+            install MetaMask
+          </Button>
+        </Box>
+      </Backdrop>
+
       <Backdrop open={openBack} className={classes.back}>
         <Box className={classes.contBack}>
           <Icon
@@ -232,8 +274,6 @@ function App() {
           </Button>
         </Box>
       </Backdrop>
-
-
 
       <Header
         wallet={wallet}
