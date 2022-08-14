@@ -137,13 +137,6 @@ const CrowdSale = ({ web3, NTokenContract, CrowdSaleContract, balance, width, fo
 
     return (
         <Box className={classes.mainCont}>
-            {/* <button onClick={()=>{MintNToken(web3,NTokenContract,CrowdSaleContract,100000)}}>111111111111</button> */}
-            {/* <button onClick={()=>{Deploy(web3)}}>222222222222222</button> */}
-            <button onClick={()=>{deployNToken(web3)}}>deploy</button>
-            <button onClick={() => { Test(web3, "0x944B3De9e7702eC3fC775D586b14B8b217Bd1664") }}>4444444444444444444</button>
-            <button onClick={() => { ApproveMarket(web3, "0x2F8475FD6EC9b5FCF102b6eC75a31d91b12AA2B5", "0x944B3De9e7702eC3fC775D586b14B8b217Bd1664") }}>ApproveMarket</button>
-            {/* <button onClick={()=>{CheckBalanceNT(web3,NTokenContract,CrowdSaleContract)}}>333333333333</button> */}
-            <button onClick={() => { Approve(web3, "0x2F8475FD6EC9b5FCF102b6eC75a31d91b12AA2B5", "0x944B3De9e7702eC3fC775D586b14B8b217Bd1664", 2) }}>approve</button>
             <Typography
                 variant={width === "xs" ? 'h4' : 'h3'}
                 style={{

@@ -28,13 +28,13 @@ const InventoryItem = ({ id, web3, openSell, width }: IInventoryItem) => {
 
     const useStyles = makeStyles((theme) => ({
         item: {
-            width: "200px",
+            width: width === "xs" ? "100%" : "200px",
             display: 'flex',
             flexDirection: 'column',
             borderRadius: '10px',
             overflow: 'hidden',
             backgroundColor: "#272834",
-            margin: "0px 10px 10px 10px"
+            margin:  width === "xs" ? "10px 0px" : "0px 10px 10px 10px"
         },
         img: {
             maxWidth: "100%",

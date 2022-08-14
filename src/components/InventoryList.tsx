@@ -21,12 +21,12 @@ interface IInventoryItem {
 const InventoryList = ({ web3, MarketContract, list, openSell, width }: IInventoryItem) => {
 
     const useStyles = makeStyles((theme) => ({
-        marketList: {
-            marginTop: "30px",
-            maxWidth: "1000px",
+        inventoryList: {
             width: "100%",
             display: "flex",
-            justifyContent: "flex-start"
+            justifyContent: "flex-start",
+            flexWrap:'wrap',
+            flexDirection: width === "xs" ? "column" : "row"
         },
         nothing:{
             width:'100%',
@@ -39,6 +39,10 @@ const InventoryList = ({ web3, MarketContract, list, openSell, width }: IInvento
     }));
     const classes = useStyles();
 
+    useEffect(()=>{
+        console.log(width);
+    },[width])
+
     const mapList = list.map((item: any, i) => ((
         <Box key={i}>
             <InventoryItem id={item} web3={web3} openSell={openSell} width={width} />
@@ -46,7 +50,7 @@ const InventoryList = ({ web3, MarketContract, list, openSell, width }: IInvento
     )));
 
     return (
-        <Box className={classes.marketList}>
+        <Box className={classes.inventoryList}>
             {
             list.length > 0 
             ? 

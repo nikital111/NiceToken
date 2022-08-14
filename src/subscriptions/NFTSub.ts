@@ -13,7 +13,7 @@ export default async function NFTSub({web3,contractAddress,setOpenBuy}:INFTSub) 
     const MyContract = new web3.eth.Contract(NFTArtifacts.abi,contractAddress);
 
     const myEvent = MyContract.events.Transfer({
-        filter: {to:acc}
+        filter: {from:"0x0000000000000000000000000000000000000000",to:acc}
     }, function (error:any, event:any) { })
         .on('data', function (event:any) {
             console.log(event,'event NFTSub'); // same results as the optional callback above

@@ -20,9 +20,10 @@ interface MarketInt {
     handleOpen: (text: string) => void,
     formatAddress: (address: string) => string,
     copyText: (text: string) => void,
+    wallet:string
 }
-
-const Market = ({ web3, MarketContract, NFTContract, balance, width, handleOpen, formatAddress, copyText }: MarketInt) => {
+declare let window: any;
+const Market = ({ web3, MarketContract, NFTContract, balance, width, handleOpen, formatAddress, copyText,wallet }: MarketInt) => {
 
     const [values, setValues] = useState({
         id: '',
@@ -73,10 +74,18 @@ const Market = ({ web3, MarketContract, NFTContract, balance, width, handleOpen,
         setList(data);
     };
 
+    function handleWalletChanged(_chainId: any) {
+        getTokensOwned(web3, NFTContract, setTokens);
+        setList([]);
+        getListf();
+        console.log("change acc");
+      }
+
     useEffect(()=>{
         getTokensOwned(web3, NFTContract, setTokens);
         getListf();
         getVolume();
+        window.ethereum.on('accountsChanged', handleWalletChanged);
     },[]);
 
     const handleChange = (title: string) => (e: any) => {
@@ -97,10 +106,25 @@ const Market = ({ web3, MarketContract, NFTContract, balance, width, handleOpen,
 
     const getFloorPrice = ()=>{
         let res = 0;
+        const time = Date.now();
         for(let i = 0; i < list.length; i++){
-            if(res > list[i].price || res === 0) res = list[i].price;
+            const myTime = +list[i].endSale*1000;
+            console.log(time < myTime);
+            if((res > list[i].price || res === 0) && myTime > time) res = list[i].price;
         }
-        return web3.utils.fromWei(res);
+        const myRes = res.toString();
+        return web3.utils.fromWei(myRes);
+    };
+
+    const getNumberItems = ()=>{
+        let res = 0;
+        const all = list.length;
+        const time = Date.now();
+        for(let i = 0; i < list.length; i++){
+            const myTime = +list[i].endSale*1000;
+            if(myTime < time) res++;
+        }
+        return all - res;
     };
 
     const getVolume = async()=>{
@@ -116,7 +140,7 @@ const Market = ({ web3, MarketContract, NFTContract, balance, width, handleOpen,
             display: 'flex',
             justifyContent: 'flex-start',
             alignItems: 'center',
-            paddingTop: width === 'xs' ? '30px' : '50px',
+            paddingTop: width === 'xs' ? '10px' : '30px',
             flexDirection: 'column'
         },
         inCont: {
@@ -153,8 +177,8 @@ const Market = ({ web3, MarketContract, NFTContract, balance, width, handleOpen,
             justifyContent: 'center',
             alignItems: 'center',
             color: '#fff',
-            padding: '25px',
-            width:'110px'
+            padding: width === "xs" ? "15px 0px" : '25px',
+            width: width === "xs" ? "100%" : '110px',
         },
         mainText: {
             fontSize: "20px",
@@ -164,7 +188,8 @@ const Market = ({ web3, MarketContract, NFTContract, balance, width, handleOpen,
             color: "#BDC0C6"
         },
         marketCont: {
-            maxWidth: '600px',
+            maxWidth: width === 'xs' ? '100%' : '600px',
+            width: width === 'xs' ? '100%' : '',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'flex-start'
@@ -172,11 +197,13 @@ const Market = ({ web3, MarketContract, NFTContract, balance, width, handleOpen,
         control:{
             width:'100%',
             display:'flex',
-            justifyContent:'center'
+            justifyContent:'center',
+            flexDirection: width === 'xs' ? 'column' : 'row'
         },
         inId: {
             color: 'white',
-            marginRight:'15px',
+            marginRight: width === 'xs' ? '0' : '15px',
+            marginBottom: width === 'xs' ? '15px' : '0',
             minWidth:'200px',
             '& fieldset': {
                 borderColor: '#18507A'
@@ -229,17 +256,20 @@ const Market = ({ web3, MarketContract, NFTContract, balance, width, handleOpen,
                         borderRadius: '10px',
                         display: 'flex',
                         justifyContent: 'center',
-                        marginTop: '10px'
+                        marginTop: '10px',
+                        flexDirection: width === "xs" ? "column" : "row",
+                        width: width === "xs" ? "100%" : ""
                     }}
                 >
                     <Box
                         className={classes.statCont}
                         style={{
-                            borderRight: '1px solid black'
+                            borderRight: width === "xs" ? "none" : '1px solid black',
+                            borderBottom:  width === "xs" ? "1px solid black" : 'none'
                         }}
                     >
                         <Typography className={classes.mainText}>
-                            {list.length}
+                            {getNumberItems()}
                         </Typography>
                         <Typography className={classes.subText}>
                             items
@@ -248,7 +278,8 @@ const Market = ({ web3, MarketContract, NFTContract, balance, width, handleOpen,
                     <Box
                         className={classes.statCont}
                         style={{
-                            borderRight: '1px solid black'
+                            borderRight: width === "xs" ? "none" : '1px solid black',
+                            borderBottom:  width === "xs" ? "1px solid black" : 'none'
                         }}
                     >
                         <div className={classes.textCont}>
@@ -324,7 +355,7 @@ const Market = ({ web3, MarketContract, NFTContract, balance, width, handleOpen,
                 </Box>
             </Box>
 
-            <MarketList web3={web3} MarketContract={MarketContract} buyItem={buyItem} list={list} delistItem={delistItem} width={width}/>
+            <MarketList web3={web3} MarketContract={MarketContract} buyItem={buyItem} list={list} delistItem={delistItem} wallet={wallet} width={width}/>
         </Box>
     )
 

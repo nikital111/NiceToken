@@ -32,6 +32,7 @@ interface InventoryInt {
     copyText: (text: string) => void,
 }
 const url = "https://ipfs.io/ipfs/Qmd54YbBbxY5MSfLWS2G68jzD7fQAZM5V6LWY2ihK1W8uo?filename=myNft1232.jpg";
+declare let window: any;
 const Inventory = ({ web3, MarketContract, NFTContract, balance, width, handleOpen, formatAddress, copyText }: InventoryInt) => {
 
     const [tokens, setTokens] = useState([]);
@@ -58,9 +59,16 @@ const Inventory = ({ web3, MarketContract, NFTContract, balance, width, handleOp
         setApproved(ap);
     }
 
+    function handleWalletChanged(_chainId: any) {
+        getTokensOwned(web3, NFTContract, setTokens);
+        getListf();
+        console.log("change acc");
+      }
+
     useEffect(() => {
         getTokensOwned(web3, NFTContract, setTokens);
         getListf();
+        window.ethereum.on('accountsChanged', handleWalletChanged);
     }, []);
 
     useEffect(() => {
@@ -73,8 +81,7 @@ const Inventory = ({ web3, MarketContract, NFTContract, balance, width, handleOp
     };
 
     const approvef = async () => {
-        await Approve(web3, NFTContract, MarketContract, sellState.id);
-        getApproved(sellState.id);
+        await Approve(web3, NFTContract, MarketContract, sellState.id,getApproved);
     };
 
     const openSellf = (id: number) => {
@@ -100,7 +107,7 @@ const Inventory = ({ web3, MarketContract, NFTContract, balance, width, handleOp
             display: 'flex',
             justifyContent: 'flex-start',
             alignItems: 'center',
-            paddingTop: width === 'xs' ? '30px' : '50px',
+            paddingTop: width === 'xs' ? '10px' : '30px',
             flexDirection: 'column'
         },
         inCont: {
@@ -201,7 +208,8 @@ const Inventory = ({ web3, MarketContract, NFTContract, balance, width, handleOp
             padding: '40px',
             backgroundColor: 'rgb(35, 36, 47)',
             borderRadius: '10px',
-            position:'relative'
+            position:'relative',
+            margin: "0px 10px"
         },
         title: {
             color: 'white',
@@ -351,10 +359,9 @@ const Inventory = ({ web3, MarketContract, NFTContract, balance, width, handleOp
                 <Box className={classes.inCont}>
 
                     <Typography
-                        variant={width === "xs" ? 'h5' : 'h4'}
+                        variant={width === "xs" ? 'h4' : 'h3'}
                         style={{
                             color: '#fff',
-                            marginTop: '10px'
                         }}
                     >
                        Your Inventory

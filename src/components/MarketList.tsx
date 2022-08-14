@@ -13,11 +13,12 @@ interface IMarketList {
     MarketContract: string,
     buyItem: (id:number, val:number)=>{},
     delistItem: (id:number)=>{},
+    wallet:string,
     width: string,
     list: Array<any>,
 }
 
-const MarketList = ({ web3, MarketContract, list, buyItem, delistItem, width }: IMarketList) => {
+const MarketList = ({ web3, MarketContract, list, buyItem, delistItem,wallet, width }: IMarketList) => {
 
     
 
@@ -40,6 +41,16 @@ const MarketList = ({ web3, MarketContract, list, buyItem, delistItem, width }: 
     }));
     const classes = useStyles();
 
+    const isMyItems = ()=>{
+        let res = false;
+        for(let i = 0; i < list.length; i++){
+            if(wallet === list[i].seller){
+                res = true;
+            }
+        }
+        return res;
+    };
+
     const mapList = list.map((item: any, i) => ((
         <Box key={i}>
             <Item id={item.idNft} price={item.price} endSale={item.endSale} description={item.description} img={item.url} seller={item.seller} buyItem={buyItem} delistItem={delistItem} web3={web3} width={width} />
@@ -49,7 +60,7 @@ const MarketList = ({ web3, MarketContract, list, buyItem, delistItem, width }: 
     return (
         <Box className={classes.marketList}>
             {
-            list.length > 0 
+            list.length > 0 && isMyItems()
             ? 
             mapList 
             : 
