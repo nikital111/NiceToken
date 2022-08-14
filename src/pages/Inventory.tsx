@@ -66,9 +66,11 @@ const Inventory = ({ web3, MarketContract, NFTContract, balance, width, handleOp
       }
 
     useEffect(() => {
+        if (window.ethereum) {
         getTokensOwned(web3, NFTContract, setTokens);
         getListf();
         window.ethereum.on('accountsChanged', handleWalletChanged);
+        }
     }, []);
 
     useEffect(() => {

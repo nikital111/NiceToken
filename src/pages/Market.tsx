@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Button, FormControl, InputAdornment,FormHelperText, InputLabel, MenuItem, OutlinedInput, Typography, withWidth, Icon } from '@material-ui/core';
+import { Box, Button, FormControl, InputAdornment, FormHelperText, InputLabel, MenuItem, OutlinedInput, Typography, withWidth, Icon } from '@material-ui/core';
 import SearchIcon from '@mui/icons-material/Search';
 import Select from "@mui/material/Select";
 import { makeStyles } from '@material-ui/core/styles';
@@ -20,10 +20,10 @@ interface MarketInt {
     handleOpen: (text: string) => void,
     formatAddress: (address: string) => string,
     copyText: (text: string) => void,
-    wallet:string
+    wallet: string
 }
 declare let window: any;
-const Market = ({ web3, MarketContract, NFTContract, balance, width, handleOpen, formatAddress, copyText,wallet }: MarketInt) => {
+const Market = ({ web3, MarketContract, NFTContract, balance, width, handleOpen, formatAddress, copyText, wallet }: MarketInt) => {
 
     const [values, setValues] = useState({
         id: '',
@@ -32,9 +32,9 @@ const Market = ({ web3, MarketContract, NFTContract, balance, width, handleOpen,
 
     const [valueSel, setValueSel] = useState(1);
     const [tokens, setTokens] = useState([]);
-    const [list, setList]:any = useState([]);
+    const [list, setList]: any = useState([]);
     const [copyList, setCopyList] = useState([]);
-    const [volume, setVolume]:any = useState(0);
+    const [volume, setVolume]: any = useState(0);
 
     useEffect(() => {
         let myList = [...list];
@@ -56,17 +56,17 @@ const Market = ({ web3, MarketContract, NFTContract, balance, width, handleOpen,
         }
     }, [valueSel])
 
-    useEffect(()=>{
-        if(!values.id){
+    useEffect(() => {
+        if (!values.id) {
             setList(copyList);
             return;
         }
-        let myList:any = [...copyList];
-        myList = myList.filter((item:any)=> {
+        let myList: any = [...copyList];
+        myList = myList.filter((item: any) => {
             return +item.idNft === +values.id;
         });
         setList(myList);
-    },[values.id])
+    }, [values.id])
 
     const getListf = async () => {
         const data: any = await GetList(web3, MarketContract);
@@ -79,14 +79,16 @@ const Market = ({ web3, MarketContract, NFTContract, balance, width, handleOpen,
         setList([]);
         getListf();
         console.log("change acc");
-      }
+    }
 
-    useEffect(()=>{
-        getTokensOwned(web3, NFTContract, setTokens);
-        getListf();
-        getVolume();
-        window.ethereum.on('accountsChanged', handleWalletChanged);
-    },[]);
+    useEffect(() => {
+        if (window.ethereum) {
+            getTokensOwned(web3, NFTContract, setTokens);
+            getListf();
+            getVolume();
+            window.ethereum.on('accountsChanged', handleWalletChanged);
+        }
+    }, []);
 
     const handleChange = (title: string) => (e: any) => {
         setValues({ ...values, [title]: e.target.value });
@@ -96,42 +98,42 @@ const Market = ({ web3, MarketContract, NFTContract, balance, width, handleOpen,
         setValueSel(e.target.value);
     };
 
-    const buyItem = async(id:number, val:number)=>{
+    const buyItem = async (id: number, val: number) => {
         BuyNft(web3, MarketContract, id, val);
     };
 
-    const delistItem = async(id:number)=>{
+    const delistItem = async (id: number) => {
         DelistItem(web3, MarketContract, id);
     };
 
-    const getFloorPrice = ()=>{
+    const getFloorPrice = () => {
         let res = 0;
         const time = Date.now();
-        for(let i = 0; i < list.length; i++){
-            const myTime = +list[i].endSale*1000;
+        for (let i = 0; i < list.length; i++) {
+            const myTime = +list[i].endSale * 1000;
             console.log(time < myTime);
-            if((res > list[i].price || res === 0) && myTime > time) res = list[i].price;
+            if ((res > list[i].price || res === 0) && myTime > time) res = list[i].price;
         }
         const myRes = res.toString();
         return web3.utils.fromWei(myRes);
     };
 
-    const getNumberItems = ()=>{
+    const getNumberItems = () => {
         let res = 0;
         const all = list.length;
         const time = Date.now();
-        for(let i = 0; i < list.length; i++){
-            const myTime = +list[i].endSale*1000;
-            if(myTime < time) res++;
+        for (let i = 0; i < list.length; i++) {
+            const myTime = +list[i].endSale * 1000;
+            if (myTime < time) res++;
         }
         return all - res;
     };
 
-    const getVolume = async()=>{
-       const res = await GetVolume(web3,MarketContract);
-       setVolume(web3.utils.fromWei(res));
+    const getVolume = async () => {
+        const res = await GetVolume(web3, MarketContract);
+        setVolume(web3.utils.fromWei(res));
     };
-    
+
 
     const useStyles = makeStyles((theme) => ({
         mainCont: {
@@ -194,17 +196,17 @@ const Market = ({ web3, MarketContract, NFTContract, balance, width, handleOpen,
             flexDirection: 'column',
             justifyContent: 'flex-start'
         },
-        control:{
-            width:'100%',
-            display:'flex',
-            justifyContent:'center',
+        control: {
+            width: '100%',
+            display: 'flex',
+            justifyContent: 'center',
             flexDirection: width === 'xs' ? 'column' : 'row'
         },
         inId: {
             color: 'white',
             marginRight: width === 'xs' ? '0' : '15px',
             marginBottom: width === 'xs' ? '15px' : '0',
-            minWidth:'200px',
+            minWidth: '200px',
             '& fieldset': {
                 borderColor: '#18507A'
             },
@@ -214,18 +216,18 @@ const Market = ({ web3, MarketContract, NFTContract, balance, width, handleOpen,
             '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
                 borderColor: '#2986CC'
             },
-            
+
         },
-        inSort:{
-            color:'white!important',
-            minWidth:'182px',
-            '& svg':{
-                color:'white'
+        inSort: {
+            color: 'white!important',
+            minWidth: '182px',
+            '& svg': {
+                color: 'white'
             },
             '& fieldset': {
                 borderColor: '#18507A'
             },
-            '&:hover fieldset':{
+            '&:hover fieldset': {
                 borderColor: '#2986CC!important'
             }
         }
@@ -265,7 +267,7 @@ const Market = ({ web3, MarketContract, NFTContract, balance, width, handleOpen,
                         className={classes.statCont}
                         style={{
                             borderRight: width === "xs" ? "none" : '1px solid black',
-                            borderBottom:  width === "xs" ? "1px solid black" : 'none'
+                            borderBottom: width === "xs" ? "1px solid black" : 'none'
                         }}
                     >
                         <Typography className={classes.mainText}>
@@ -279,7 +281,7 @@ const Market = ({ web3, MarketContract, NFTContract, balance, width, handleOpen,
                         className={classes.statCont}
                         style={{
                             borderRight: width === "xs" ? "none" : '1px solid black',
-                            borderBottom:  width === "xs" ? "1px solid black" : 'none'
+                            borderBottom: width === "xs" ? "1px solid black" : 'none'
                         }}
                     >
                         <div className={classes.textCont}>
@@ -298,7 +300,7 @@ const Market = ({ web3, MarketContract, NFTContract, balance, width, handleOpen,
                         <div className={classes.textCont}>
                             <img src={EthImg} className={classes.imgEth} />
                             <Typography className={classes.mainText}>
-                               {volume}
+                                {volume}
                             </Typography>
                         </div>
                         <Typography className={classes.subText}>
@@ -319,43 +321,51 @@ const Market = ({ web3, MarketContract, NFTContract, balance, width, handleOpen,
                         onChange={handleChange('id')}
                         placeholder="ID"
                         startAdornment={<InputAdornment position="start">
-                            <div 
-                            className={classes.subText}
-                            style={{
-                                display:'flex',
-                                alignContent:'center',
-                                justifyContent:'center'
-                            }}
+                            <div
+                                className={classes.subText}
+                                style={{
+                                    display: 'flex',
+                                    alignContent: 'center',
+                                    justifyContent: 'center'
+                                }}
                             >
-                            <Icon>
-                                <SearchIcon/>
-                            </Icon>
+                                <Icon>
+                                    <SearchIcon />
+                                </Icon>
                             </div>
-                            </InputAdornment>}
+                        </InputAdornment>}
                     />
-                        <Select
-                            value={valueSel}
-                            onChange={handleSelect}
-                            variant="outlined"
-                            className={classes.inSort}
-                            MenuProps={{
-                                MenuListProps:{
-                                    style:{
-                                    backgroundColor:'#41424d',
-                                    color:'white'
-                                    }
+                    <Select
+                        value={valueSel}
+                        onChange={handleSelect}
+                        variant="outlined"
+                        className={classes.inSort}
+                        MenuProps={{
+                            MenuListProps: {
+                                style: {
+                                    backgroundColor: '#41424d',
+                                    color: 'white'
                                 }
-                            }}
-                        >
-                            <MenuItem value={1}>Price: Low to High</MenuItem>
-                            <MenuItem value={2}>Price High to Low</MenuItem>
-                            <MenuItem value={3}>ID: Low to High</MenuItem>
-                            <MenuItem value={4}>ID: High to Low</MenuItem>
-                        </Select>
+                            }
+                        }}
+                    >
+                        <MenuItem value={1}>Price: Low to High</MenuItem>
+                        <MenuItem value={2}>Price High to Low</MenuItem>
+                        <MenuItem value={3}>ID: Low to High</MenuItem>
+                        <MenuItem value={4}>ID: High to Low</MenuItem>
+                    </Select>
                 </Box>
             </Box>
 
-            <MarketList web3={web3} MarketContract={MarketContract} buyItem={buyItem} list={list} delistItem={delistItem} wallet={wallet} width={width}/>
+            <MarketList 
+            web3={web3} 
+            MarketContract={MarketContract} 
+            buyItem={buyItem} 
+            list={list} 
+            delistItem={delistItem} 
+            wallet={wallet} 
+            getNumberItems={getNumberItems}
+            width={width} />
         </Box>
     )
 

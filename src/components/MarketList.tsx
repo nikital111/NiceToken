@@ -14,11 +14,12 @@ interface IMarketList {
     buyItem: (id:number, val:number)=>{},
     delistItem: (id:number)=>{},
     wallet:string,
+    getNumberItems:()=>number,
     width: string,
     list: Array<any>,
 }
 
-const MarketList = ({ web3, MarketContract, list, buyItem, delistItem,wallet, width }: IMarketList) => {
+const MarketList = ({ web3, MarketContract, list, buyItem, delistItem,wallet,getNumberItems, width }: IMarketList) => {
 
     
 
@@ -60,7 +61,7 @@ const MarketList = ({ web3, MarketContract, list, buyItem, delistItem,wallet, wi
     return (
         <Box className={classes.marketList}>
             {
-            list.length > 0 && isMyItems()
+            getNumberItems() > 0 || isMyItems()
             ? 
             mapList 
             : 
