@@ -1,57 +1,65 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import "./App.css";
-import CrowdSale from './pages/CrowdSale';
-import Web3 from 'web3';
-import CrowdSaleSub from './subscriptions/CrowdSaleSub';
-import Header from './static/Header';
-import { Backdrop, Box, Button, Icon, Snackbar, Typography } from '@material-ui/core';
-import NTokenSub from './subscriptions/NTokenSub';
-import MintNFT from './pages/MintNFT';
-import NFTSub from './subscriptions/NFTSub';
-import getBalances from './scripts/getBalances';
-import Market from './pages/Market';
-import Inventory from './pages/Inventory';
-import ErrorIcon from '@mui/icons-material/Error';
-import { makeStyles } from '@material-ui/core/styles';
-const NTokenContract = "0x42051f63cb7d35AF942c51Ba00F601d34894d4B9";
-const CrowdSaleContract = "0xF32014F1f51853D0f17aa93c04eAC719F3AEA025";
-const NFTContract = "0x2F8475FD6EC9b5FCF102b6eC75a31d91b12AA2B5";
+import CrowdSale from "./pages/CrowdSale";
+import Web3 from "web3";
+import CrowdSaleSub from "./subscriptions/CrowdSaleSub";
+import Header from "./static/Header";
+import {
+  Backdrop,
+  Box,
+  Button,
+  Icon,
+  Snackbar,
+  Typography,
+} from "@material-ui/core";
+import NTokenSub from "./subscriptions/NTokenSub";
+import MintNFT from "./pages/MintNFT";
+import NFTSub from "./subscriptions/NFTSub";
+import getBalances from "./scripts/getBalances";
+import Market from "./pages/Market";
+import Inventory from "./pages/Inventory";
+import ErrorIcon from "@mui/icons-material/Error";
+import { makeStyles } from "@material-ui/core/styles";
+
 let MyContract = "0x4f66837cC7ca7362eA68c7D8C1b84BDC278e032d";
-const MarketAddress = "0x944B3De9e7702eC3fC775D586b14B8b217Bd1664";
+
+const NTokenContract = "0xC57d977a1245547222250A837C7a8398EB7307fF";
+const CrowdSaleContract = "0xc6C6E0D60d5f99b8BbC2f97E684f80094A729632";
+const NFTContract = "0x644854870e20f442bAFFa61Fdbd3BCA1C24aA83a";
+const MarketAddress = "0xc87489a6571df3e1d058F5a9D320e5bb5131d379";
 
 declare let window: any;
 function App() {
-
   const [web3, setWeb3] = useState(new Web3(window.ethereum));
-  const [wallet, setWallet] = useState('');
+  const [wallet, setWallet] = useState("");
   const [balance, setBalance] = useState(0);
   const [openSnack, setOpenSnack] = useState(false);
-  const [textSnack, setTextSnack] = useState('');
+  const [textSnack, setTextSnack] = useState("");
   const [openBack, setOpenBack] = useState(false);
   const [openBackNoEth, setOpenBackNoEth] = useState(false);
 
   useEffect(() => {
-    if(window.ethereum){
-    ff();
-    window.ethereum.on('chainChanged', handleChainChanged);
-    window.ethereum.on('accountsChanged', handleWalletChanged);
-    }
-    else {
+    if (window.ethereum) {
+      ff();
+      window.ethereum.on("chainChanged", handleChainChanged);
+      window.ethereum.on("accountsChanged", handleWalletChanged);
+    } else {
       setOpenBackNoEth(true);
     }
   }, []);
 
   useEffect(() => {
-    if(window.ethereum){
-    if (window.ethereum.chainId !== "0x4" && window.ethereum.chainId !== null) {
-      setOpenBack(true);
-      changeChain();
+    if (window.ethereum) {
+      if (
+        window.ethereum.chainId !== "0x5" &&
+        window.ethereum.chainId !== null
+      ) {
+        setOpenBack(true);
+        changeChain();
+      }
     }
-  }
   }, [web3]);
-
-
 
   function handleChainChanged(_chainId: any) {
     window.location.reload();
@@ -64,10 +72,10 @@ function App() {
   const changeChain = async () => {
     try {
       await window.ethereum.request({
-        method: 'wallet_switchEthereumChain',
+        method: "wallet_switchEthereumChain",
         params: [
           {
-            chainId: '0x4',
+            chainId: "0x5",
           },
         ],
       });
@@ -89,14 +97,16 @@ function App() {
         checkBalance(acc);
         CrowdSaleSub(myWeb3, CrowdSaleContract, handleOpen);
         NTokenSub(myWeb3, NTokenContract, CrowdSaleContract);
-        NFTSub({ web3: myWeb3, contractAddress: NFTContract, setOpenBuy: handleOpen });
+        NFTSub({
+          web3: myWeb3,
+          contractAddress: NFTContract,
+          setOpenBuy: handleOpen,
+        });
+      } else {
+        console.log("no");
       }
-      else {
-        console.log('no')
-      }
-    }
-    catch {
-      console.log('error')
+    } catch {
+      console.log("error");
     }
   };
 
@@ -108,48 +118,45 @@ function App() {
         setWallet(acc);
         checkBalance(acc);
         web3.eth.defaultAccount = acc;
+      } else {
+        console.log("no");
       }
-      else {
-        console.log('no')
-      }
+    } catch {
+      console.log("error");
     }
-    catch {
-      console.log('error')
-    }
-  }
+  };
 
   const checkBalance = (acc: string) => {
     if (acc) {
-      web3.eth.getBalance(acc)
-        .then((data: string) => {
-          let val = web3.utils.fromWei(data, 'ether');
-          setBalance(+val);
-        })
+      web3.eth.getBalance(acc).then((data: string) => {
+        let val = web3.utils.fromWei(data, "ether");
+        setBalance(+val);
+      });
     }
-  }
+  };
 
   const handleOpen = (text: string) => {
     setOpenSnack(true);
     setTextSnack(text);
-  }
+  };
 
   const handleClose = () => {
     setOpenSnack(false);
-  }
+  };
 
   const formatAddress = (address: string) => {
-    let formatAddress = address.split('');
-    formatAddress.splice(5, 33, '.', '.', '.');
-    let res = formatAddress.join('');
+    let formatAddress = address.split("");
+    formatAddress.splice(5, 33, ".", ".", ".");
+    let res = formatAddress.join("");
     return res;
-  }
+  };
 
   const copyText = (text: string) => {
     navigator.clipboard.writeText(text);
     handleOpen("Copied!");
-  }
+  };
 
-  const toMetamask = ()=>{
+  const toMetamask = () => {
     window.location = "https://metamask.io/";
   };
 
@@ -160,58 +167,57 @@ function App() {
     },
     contBack: {
       maxWidth: "500px",
-      width: '90%',
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'flex-start',
-      alignItems: 'center',
-      padding: '40px',
-      backgroundColor: 'rgb(35, 36, 47)',
-      borderRadius: '10px',
-      position: 'relative',
-      margin:'0px 10px'
+      width: "90%",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "flex-start",
+      alignItems: "center",
+      padding: "40px",
+      backgroundColor: "rgb(35, 36, 47)",
+      borderRadius: "10px",
+      position: "relative",
+      margin: "0px 10px",
     },
     title: {
-      color: 'white',
-      fontSize: '17px',
+      color: "white",
+      fontSize: "17px",
     },
     butt: {
-      backgroundColor: 'rgb(72, 157, 254)',
-      width: '100%',
-      height: '50px',
-      borderRadius: '20px',
-      color: '#fff',
-      marginTop: '25px',
-      fontWeight: 'bold',
-      fontSize: '15px',
-      '&.MuiButton-contained:hover': {
-        backgroundColor: 'rgb(72, 157, 254)',
-        boxShadow: 'none'
-      }
+      backgroundColor: "rgb(72, 157, 254)",
+      width: "100%",
+      height: "50px",
+      borderRadius: "20px",
+      color: "#fff",
+      marginTop: "25px",
+      fontWeight: "bold",
+      fontSize: "15px",
+      "&.MuiButton-contained:hover": {
+        backgroundColor: "rgb(72, 157, 254)",
+        boxShadow: "none",
+      },
     },
   }));
   const classes = useStyles();
 
   return (
     <div className="App">
-
       {/* <img src="https://ipfs.io/ipfs/QmbGPwa7yVNLeUBRrnCgrtiStSFVNxsWD5enPhswpdCE1F?filename=myNft.jpg"/> */}
 
       <Snackbar
         open={openSnack}
         autoHideDuration={5000}
         onClose={handleClose}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
       >
-        <Box style={{
-          color: '#fff',
-          backgroundColor: 'rgb(35, 36, 47)',
-          padding: '20px',
-          borderRadius: '10px'
-        }}>
-          <Typography variant='h6'>
-            {textSnack}
-          </Typography>
+        <Box
+          style={{
+            color: "#fff",
+            backgroundColor: "rgb(35, 36, 47)",
+            padding: "20px",
+            borderRadius: "10px",
+          }}
+        >
+          <Typography variant="h6">{textSnack}</Typography>
         </Box>
       </Snackbar>
 
@@ -219,25 +225,25 @@ function App() {
         <Box className={classes.contBack}>
           <Icon
             style={{
-              width: '60px',
-              height: '60px',
-              marginBottom: '15px'
+              width: "60px",
+              height: "60px",
+              marginBottom: "15px",
             }}
           >
             <ErrorIcon
               style={{
-                color: 'white',
-                width: '60px',
-                height: '60px'
+                color: "white",
+                width: "60px",
+                height: "60px",
               }}
             ></ErrorIcon>
           </Icon>
           <Typography className={classes.title}>
-          Please install MetaMask!
+            Please install MetaMask!
           </Typography>
           <Button
             className={classes.butt}
-            variant='contained'
+            variant="contained"
             onClick={toMetamask}
           >
             install MetaMask
@@ -249,25 +255,25 @@ function App() {
         <Box className={classes.contBack}>
           <Icon
             style={{
-              width: '60px',
-              height: '60px',
-              marginBottom: '15px'
+              width: "60px",
+              height: "60px",
+              marginBottom: "15px",
             }}
           >
             <ErrorIcon
               style={{
-                color: 'white',
-                width: '60px',
-                height: '60px'
+                color: "white",
+                width: "60px",
+                height: "60px",
               }}
             ></ErrorIcon>
           </Icon>
           <Typography className={classes.title}>
-            Please change the network in metamask to Rinkeby!
+            Please change the network in metamask to Goerli!
           </Typography>
           <Button
             className={classes.butt}
-            variant='contained'
+            variant="contained"
             onClick={changeChain}
           >
             Change Chain
@@ -283,7 +289,6 @@ function App() {
         copyText={copyText}
       />
       <Routes>
-
         <Route
           path="/"
           element={
@@ -295,8 +300,9 @@ function App() {
               handleOpen={handleOpen}
               formatAddress={formatAddress}
               copyText={copyText}
-            />}>
-        </Route>
+            />
+          }
+        ></Route>
 
         <Route
           path="/mintnft"
@@ -309,8 +315,9 @@ function App() {
               handleOpen={handleOpen}
               formatAddress={formatAddress}
               copyText={copyText}
-            />}>
-        </Route>
+            />
+          }
+        ></Route>
 
         <Route
           path="/market"
@@ -324,8 +331,9 @@ function App() {
               formatAddress={formatAddress}
               copyText={copyText}
               wallet={wallet}
-            />}>
-        </Route>
+            />
+          }
+        ></Route>
 
         <Route
           path="/inventory"
@@ -338,9 +346,9 @@ function App() {
               handleOpen={handleOpen}
               formatAddress={formatAddress}
               copyText={copyText}
-            />}>
-        </Route>
-
+            />
+          }
+        ></Route>
       </Routes>
     </div>
   );
